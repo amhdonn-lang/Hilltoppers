@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-13T10:32:24.211Z",
+  "updatedAt": "2026-09-13T14:53:49.660Z",
   "source": "menus.tenkites.com",
   "menuDate": "2026-09-13",
   "menus": {
@@ -38,7 +38,7 @@
       ]
     }
   },
-  "daysUpdatedAt": "2026-09-13T00:11:29.272Z",
+  "daysUpdatedAt": "2026-09-13T14:53:49.660Z",
   "days": {
     "2026-09-13": {
       "breakfast": {
@@ -366,6 +366,35 @@
           "Tilapia with Lemon Basil Vinaigrette",
           "Broccoli & Rice Casserole",
           "Sauteed Broccolini"
+        ]
+      }
+    },
+    "2026-09-20": {
+      "breakfast": {
+        "classicKitchen": [],
+        "globalFare": []
+      },
+      "lunch": {
+        "classicKitchen": [
+          "Seasoned Tater Tots",
+          "Plant-Based Chik'n Tenders",
+          "Buttered Corn",
+          "Chicken Waffle Sandwich"
+        ],
+        "globalFare": []
+      },
+      "dinner": {
+        "classicKitchen": [
+          "Chicken Breast Florentine",
+          "Manicotti W/ Florentine Sauce",
+          "Green Peas",
+          "Grilled Balsamic Yellow Squash"
+        ],
+        "globalFare": [
+          "Pork Ribs Baby Back BBQ",
+          "Beer Battered French Fries",
+          "Baked Beans",
+          "Seasoned Corn on the Cob"
         ]
       }
     }
