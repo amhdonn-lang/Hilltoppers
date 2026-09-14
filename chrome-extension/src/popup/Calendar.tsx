@@ -250,9 +250,12 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
 
   const selected = selectedKey ? infoByKey.get(selectedKey) ?? null : null;
 
+  // Landing on a month with nothing picked left the panel empty; the first
+  // of the month (or today, when it is this month) gives it something to say.
   const stepMonth = (delta: number) => {
-    setMonth((prev) => prev.plus({ months: delta }));
-    setSelectedKey(null);
+    const next = month.plus({ months: delta });
+    setMonth(next);
+    setSelectedKey(next.hasSame(fromKey(todayKey), 'month') ? todayKey : toKey(next.startOf('month')));
     setScheduleOpen(false);
   };
 
