@@ -847,9 +847,14 @@ header {
   font-variant-numeric: tabular-nums;
 }
 
+/* Stands in for a list of events or blocks, so it is built to the same line
+   as one of those rows: switching between a day with one event and a day
+   with none then leaves the panel exactly as tall. */
 .events-empty {
   margin: 0;
+  padding: 5px 0;
   font-size: 13px;
+  line-height: 1.35;
   color: #7d8591;
 }
 
