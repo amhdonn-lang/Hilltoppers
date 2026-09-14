@@ -92,8 +92,24 @@ function humanizeType(type: string): string {
 
 /**
  * Follows the same rules as data/scripts/fetch_day_type.mjs for what counts
- * as a school day, so the red here agrees with the "No School" the file says.
+ * as a school day, so a blank day here agrees with the "No School" that file
+ * publishes — and still answers for months the file does not reach.
  */
+function isDayOff(
+  key: string,
+  dayTypes: DayTypeMap,
+  specialDays: Record<string, SpecialDayRecord>,
+  periods: SpecialPeriod[]
+): boolean {
+  const special = specialDays[key];
+  if (special?.type) return special.type === 'no_school';
+  const weekday = fromKey(key).weekday; // 1 = Monday … 7 = Sunday
+  return periods.some((p) => key >= p.start && key <= p.end)
+    || weekday === 6
+    || weekday === 7
+    || dayTypes[key] === 'No School';
+}
+
 function describeDay(
   key: string,
   events: CalendarEvent[],
@@ -103,15 +119,7 @@ function describeDay(
 ): DayInfo {
   const special = specialDays[key];
   const period = periods.find((p) => key >= p.start && key <= p.end) ?? null;
-  const weekday = fromKey(key).weekday; // 1 = Monday … 7 = Sunday
-  const isWeekend = weekday === 6 || weekday === 7;
-
-  let noSchool: boolean;
-  if (special?.type) {
-    noSchool = special.type === 'no_school';
-  } else {
-    noSchool = period !== null || isWeekend || dayTypes[key] === 'No School';
-  }
+  const noSchool = isDayOff(key, dayTypes, specialDays, periods);
 
   const dayEvents = events.filter((e) => e.start <= key && key <= e.end).sort(compareEvents);
   const hasScheduleEvent = dayEvents.some((e) => e.kind === 'schedule');
@@ -246,12 +254,21 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
 
   const selected = infoByKey.get(selectedKey) ?? null;
 
-  // Landing on a month with nothing picked left the panel empty; the first
-  // of the month (or today, when it is this month) gives it something to say.
+  // The 1st is often a Saturday or still inside a break, and a blank day has
+  // nothing to show, so land on the month's first day of school instead.
+  const firstSchoolDay = (target: DateTime): string => {
+    const start = target.startOf('month');
+    for (let i = 0; i < (start.daysInMonth ?? 31); i += 1) {
+      const key = toKey(start.plus({ days: i }));
+      if (!isDayOff(key, dayTypes, specialDays, periods)) return key;
+    }
+    return toKey(start); // A month entirely off, like July.
+  };
+
   const stepMonth = (delta: number) => {
     const next = month.plus({ months: delta });
     setMonth(next);
-    setSelectedKey(next.hasSame(fromKey(todayKey), 'month') ? todayKey : toKey(next.startOf('month')));
+    setSelectedKey(next.hasSame(fromKey(todayKey), 'month') ? todayKey : firstSchoolDay(next));
     setScheduleOpen(false);
   };
 
