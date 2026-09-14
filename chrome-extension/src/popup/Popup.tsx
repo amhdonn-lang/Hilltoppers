@@ -763,9 +763,10 @@ const Popup: React.FC = () => {
   }, [nextBlock?.id, nextStartsInMs]);
 
   /**
-   * Sits on the Schedule row while the user's own lunch is still ahead. Lunch is
-   * a sub-block of a class block, so the class stays current underneath; naming
-   * the wave keeps it clear which of the five the countdown belongs to.
+   * Sits on the Schedule row through the user's own lunch: how long until it
+   * starts, then how long is left of it. Lunch is a sub-block of a class block,
+   * so the class stays current underneath; naming the wave keeps it clear which
+   * of the five the countdown belongs to.
    */
   const lunchCountdown = useMemo(() => {
     if (!currentBlock || schedulePrefs.lunchWave == null) {
@@ -778,10 +779,14 @@ const Popup: React.FC = () => {
       return null;
     }
     const start = parseBlockTime(mine.start, baseDate);
-    if (now >= start) {
-      return null;
+    const end = parseBlockTime(mine.end, baseDate);
+    if (now < start) {
+      return `${mine.name} in ${formatCountdown(start.getTime() - now.getTime())}`;
     }
-    return `${mine.name} in ${formatCountdown(start.getTime() - now.getTime())}`;
+    if (now < end) {
+      return `${mine.name} ends in ${formatCountdown(end.getTime() - now.getTime())}`;
+    }
+    return null;
   }, [currentBlock, schedulePrefs.lunchWave, baseDate, now]);
 
   const currentDisplay = useMemo(() => {
