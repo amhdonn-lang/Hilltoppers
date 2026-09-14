@@ -582,8 +582,8 @@ header {
   display: none;
 }
 
-/* Events: the next couple of things on the school calendar, then a way out to
-   the school's own page for everything else. Same shell as Menu. */
+/* Calendar: a month of the school calendar, then a way out to the school's
+   own page for the details. Same shell as Menu. */
 .events-list {
   display: flex;
   flex-direction: column;
@@ -591,70 +591,250 @@ header {
   margin-top: 12px;
 }
 
-.events-content {
+.calendar-content {
   border: 1px solid rgba(17, 17, 17, 0.18);
   border-radius: 8px;
   background: #ffffff;
   padding: 12px;
 }
 
-.events-list.collapsed .events-content {
+.events-list.collapsed .calendar-content {
   display: none;
 }
 
-/* One card per event, built like a dining column: a small grey caption over
-   the thing itself. Stacked rather than side by side — event titles are
-   sentences, and half a popup's width would wrap most of them. */
-.events-items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.cal-header {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
-.event-card {
+.cal-month {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2f3842;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.cal-weekday {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #a0a7b0;
+  padding-bottom: 2px;
+}
+
+/* The background is the day's colour, the mark below the number is what is
+   on. Both stay quiet: the same tints the day-type pill uses, and one small
+   dark shape rather than a second colour. */
+.cal-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1px;
+  height: 34px;
+  padding: 4px 0 2px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: #161b22;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cal-day:hover {
+  border-color: rgba(17, 17, 17, 0.18);
+}
+
+.cal-day:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(26, 127, 55, 0.28);
+}
+
+.cal-day-outside {
+  color: #c9ced4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.cal-day.cal-green {
+  background: rgba(26, 127, 55, 0.12);
+}
+
+.cal-day.cal-white {
+  background: #f0f2f5;
+}
+
+.cal-day.cal-no-school {
+  background: rgba(188, 76, 44, 0.12);
+  color: #8a3a22;
+}
+
+.cal-day.cal-today {
+  border-color: rgba(17, 17, 17, 0.55);
+  font-weight: 700;
+}
+
+.cal-day.cal-selected {
+  border-color: #1a7f37;
+  box-shadow: 0 0 0 1px #1a7f37;
+}
+
+.cal-day-number {
+  line-height: 1;
+}
+
+.cal-mark {
+  display: block;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  color: #161b22;
+}
+
+.cal-day.cal-no-school .cal-mark {
+  color: #8a3a22;
+}
+
+/* What the tapped day holds. Same card as a dining column. */
+.cal-day-panel {
+  margin-top: 10px;
   border: 1px solid rgba(17, 17, 17, 0.1);
   border-radius: 6px;
   background: #fbfcff;
-  overflow: hidden;
-}
-
-/* The padding lives on the link, not the card, so the whole card is the
-   target rather than just the text inside it. */
-.event-card-link {
-  display: block;
   padding: 8px;
-  color: inherit;
-  text-decoration: none;
 }
 
-a.event-card-link:hover .event-title {
-  color: #1a7f37;
-}
-
-a.event-card-link:focus-visible {
-  outline: 2px solid #1a7f37;
-  outline-offset: -2px;
-}
-
-.event-when {
-  margin: 0 0 4px;
+.cal-day-title {
+  margin: 0 0 6px;
   font-size: 11px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #7d8591;
   font-weight: 700;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
-.event-title {
+.cal-events {
+  list-style: none;
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-event + .cal-event {
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.cal-event > a,
+.cal-event > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cal-event > a:hover .cal-event-title {
+  color: #1a7f37;
+}
+
+.cal-event-title {
+  flex: 1 1 auto;
+  min-width: 0;
   font-size: 13px;
-  color: #161b22;
   font-weight: 600;
   line-height: 1.35;
+  color: #161b22;
   transition: color 0.15s ease;
+}
+
+.cal-event-time {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: #7d8591;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A bare row rather than another bordered button: it is already inside a
+   card, and the section headers are one level up. */
+.cal-schedule {
+  margin-top: 6px;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+  padding-top: 4px;
+}
+
+.cal-schedule-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a5560;
+  cursor: pointer;
+}
+
+.cal-schedule-toggle:hover {
+  color: #161b22;
+}
+
+.cal-blocks {
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cal-blocks li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 12px;
+  color: #161b22;
+}
+
+.cal-blocks li.muted-block {
+  color: #7d8591;
+}
+
+.cal-block-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.cal-block-time {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .events-empty {
