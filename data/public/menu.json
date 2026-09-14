@@ -1,58 +1,160 @@
 {
-  "updatedAt": "2026-09-14T22:41:07.918Z",
+  "updatedAt": "2026-09-14T23:28:44.097Z",
   "source": "menus.tenkites.com",
   "menuDate": "2026-09-14",
   "menus": {
     "breakfast": {
       "classicKitchen": [
-        "Mild Shredded Cheddar Cheese",
-        "Fresh Green Bell Pepper",
-        "Fresh Clipped Spinach",
-        "Cheese Omelet",
-        "Sliced Smoked Ham",
-        "Sliced Mushrooms",
-        "Fresh Red Onion",
-        "Bacon Bits",
-        "Shredded Mozzarella Cheese",
-        "Fresh Red Bell Pepper(s)"
+        {
+          "name": "Mild Shredded Cheddar Cheese",
+          "glutenFree": true
+        },
+        {
+          "name": "Fresh Green Bell Pepper",
+          "glutenFree": true
+        },
+        {
+          "name": "Fresh Clipped Spinach",
+          "glutenFree": true
+        },
+        {
+          "name": "Cheese Omelet",
+          "glutenFree": true
+        },
+        {
+          "name": "Sliced Smoked Ham",
+          "glutenFree": true
+        },
+        {
+          "name": "Sliced Mushrooms",
+          "glutenFree": true
+        },
+        {
+          "name": "Fresh Red Onion",
+          "glutenFree": true
+        },
+        {
+          "name": "Bacon Bits",
+          "glutenFree": true
+        },
+        {
+          "name": "Shredded Mozzarella Cheese",
+          "glutenFree": true
+        },
+        {
+          "name": "Fresh Red Bell Pepper(s)",
+          "glutenFree": true
+        }
       ],
       "globalFare": [
-        "Scrambled Eggs",
-        "Sausage Patty",
-        "Blueberry Pancake",
-        "Hashbrown Patty"
+        {
+          "name": "Scrambled Eggs",
+          "glutenFree": true
+        },
+        {
+          "name": "Sausage Patty",
+          "glutenFree": true
+        },
+        {
+          "name": "Blueberry Pancake",
+          "glutenFree": true
+        },
+        {
+          "name": "Hashbrown Patty",
+          "glutenFree": true
+        }
       ]
     },
     "lunch": {
       "classicKitchen": [
-        "Meatball",
-        "Meatballs TVP Vegan GF",
-        "Tricolor Cheese Tortellini",
-        "Broccoli & Carrots",
-        "Marinara Sauce"
+        {
+          "name": "Meatball",
+          "glutenFree": true
+        },
+        {
+          "name": "Meatballs TVP Vegan GF",
+          "glutenFree": true
+        },
+        {
+          "name": "Tricolor Cheese Tortellini",
+          "glutenFree": true
+        },
+        {
+          "name": "Broccoli & Carrots",
+          "glutenFree": true
+        },
+        {
+          "name": "Marinara Sauce",
+          "glutenFree": true
+        }
       ],
       "globalFare": [
-        "Chili Dog",
-        "Sauteed Peppers & Onions",
-        "Seasoned Tater Tots",
-        "Chili con Carne",
-        "Full O'Beans Chili"
+        {
+          "name": "Chili Dog",
+          "glutenFree": true
+        },
+        {
+          "name": "Sauteed Peppers & Onions",
+          "glutenFree": true
+        },
+        {
+          "name": "Seasoned Tater Tots",
+          "glutenFree": true
+        },
+        {
+          "name": "Chili con Carne",
+          "glutenFree": true
+        },
+        {
+          "name": "Full O'Beans Chili",
+          "glutenFree": true
+        }
       ]
     },
     "dinner": {
       "classicKitchen": [
-        "Tradition Wht Brd Stuffing Mix",
-        "Herb Baked Chicken Breast",
-        "Mashed Potatoes",
-        "Seasoned Corn on the Cob",
-        "Broccoli Salad",
-        "Chicken Gravy"
+        {
+          "name": "Tradition Wht Brd Stuffing Mix",
+          "glutenFree": true
+        },
+        {
+          "name": "Herb Baked Chicken Breast",
+          "glutenFree": true
+        },
+        {
+          "name": "Mashed Potatoes",
+          "glutenFree": true
+        },
+        {
+          "name": "Seasoned Corn on the Cob",
+          "glutenFree": true
+        },
+        {
+          "name": "Broccoli Salad",
+          "glutenFree": true
+        },
+        {
+          "name": "Chicken Gravy",
+          "glutenFree": true
+        }
       ],
       "globalFare": [
-        "Cajun Shrimp Etouffee",
-        "Parmesan Polenta",
-        "Pinto Beans w/Pizzazz",
-        "Peas and Carrots"
+        {
+          "name": "Cajun Shrimp Etouffee",
+          "glutenFree": true
+        },
+        {
+          "name": "Parmesan Polenta",
+          "glutenFree": true
+        },
+        {
+          "name": "Pinto Beans w/Pizzazz",
+          "glutenFree": true
+        },
+        {
+          "name": "Peas and Carrots",
+          "glutenFree": true
+        }
       ]
     }
   },
@@ -61,54 +163,156 @@
     "2026-09-14": {
       "breakfast": {
         "classicKitchen": [
-          "Mild Shredded Cheddar Cheese",
-          "Fresh Green Bell Pepper",
-          "Fresh Clipped Spinach",
-          "Cheese Omelet",
-          "Sliced Smoked Ham",
-          "Sliced Mushrooms",
-          "Fresh Red Onion",
-          "Bacon Bits",
-          "Shredded Mozzarella Cheese",
-          "Fresh Red Bell Pepper(s)"
+          {
+            "name": "Mild Shredded Cheddar Cheese",
+            "glutenFree": true
+          },
+          {
+            "name": "Fresh Green Bell Pepper",
+            "glutenFree": true
+          },
+          {
+            "name": "Fresh Clipped Spinach",
+            "glutenFree": true
+          },
+          {
+            "name": "Cheese Omelet",
+            "glutenFree": true
+          },
+          {
+            "name": "Sliced Smoked Ham",
+            "glutenFree": true
+          },
+          {
+            "name": "Sliced Mushrooms",
+            "glutenFree": true
+          },
+          {
+            "name": "Fresh Red Onion",
+            "glutenFree": true
+          },
+          {
+            "name": "Bacon Bits",
+            "glutenFree": true
+          },
+          {
+            "name": "Shredded Mozzarella Cheese",
+            "glutenFree": true
+          },
+          {
+            "name": "Fresh Red Bell Pepper(s)",
+            "glutenFree": true
+          }
         ],
         "globalFare": [
-          "Scrambled Eggs",
-          "Sausage Patty",
-          "Blueberry Pancake",
-          "Hashbrown Patty"
+          {
+            "name": "Scrambled Eggs",
+            "glutenFree": true
+          },
+          {
+            "name": "Sausage Patty",
+            "glutenFree": true
+          },
+          {
+            "name": "Blueberry Pancake",
+            "glutenFree": true
+          },
+          {
+            "name": "Hashbrown Patty",
+            "glutenFree": true
+          }
         ]
       },
       "lunch": {
         "classicKitchen": [
-          "Meatball",
-          "Meatballs TVP Vegan GF",
-          "Tricolor Cheese Tortellini",
-          "Broccoli & Carrots",
-          "Marinara Sauce"
+          {
+            "name": "Meatball",
+            "glutenFree": true
+          },
+          {
+            "name": "Meatballs TVP Vegan GF",
+            "glutenFree": true
+          },
+          {
+            "name": "Tricolor Cheese Tortellini",
+            "glutenFree": true
+          },
+          {
+            "name": "Broccoli & Carrots",
+            "glutenFree": true
+          },
+          {
+            "name": "Marinara Sauce",
+            "glutenFree": true
+          }
         ],
         "globalFare": [
-          "Chili Dog",
-          "Sauteed Peppers & Onions",
-          "Seasoned Tater Tots",
-          "Chili con Carne",
-          "Full O'Beans Chili"
+          {
+            "name": "Chili Dog",
+            "glutenFree": true
+          },
+          {
+            "name": "Sauteed Peppers & Onions",
+            "glutenFree": true
+          },
+          {
+            "name": "Seasoned Tater Tots",
+            "glutenFree": true
+          },
+          {
+            "name": "Chili con Carne",
+            "glutenFree": true
+          },
+          {
+            "name": "Full O'Beans Chili",
+            "glutenFree": true
+          }
         ]
       },
       "dinner": {
         "classicKitchen": [
-          "Tradition Wht Brd Stuffing Mix",
-          "Herb Baked Chicken Breast",
-          "Mashed Potatoes",
-          "Seasoned Corn on the Cob",
-          "Broccoli Salad",
-          "Chicken Gravy"
+          {
+            "name": "Tradition Wht Brd Stuffing Mix",
+            "glutenFree": true
+          },
+          {
+            "name": "Herb Baked Chicken Breast",
+            "glutenFree": true
+          },
+          {
+            "name": "Mashed Potatoes",
+            "glutenFree": true
+          },
+          {
+            "name": "Seasoned Corn on the Cob",
+            "glutenFree": true
+          },
+          {
+            "name": "Broccoli Salad",
+            "glutenFree": true
+          },
+          {
+            "name": "Chicken Gravy",
+            "glutenFree": true
+          }
         ],
         "globalFare": [
-          "Cajun Shrimp Etouffee",
-          "Parmesan Polenta",
-          "Pinto Beans w/Pizzazz",
-          "Peas and Carrots"
+          {
+            "name": "Cajun Shrimp Etouffee",
+            "glutenFree": true
+          },
+          {
+            "name": "Parmesan Polenta",
+            "glutenFree": true
+          },
+          {
+            "name": "Pinto Beans w/Pizzazz",
+            "glutenFree": true
+          },
+          {
+            "name": "Peas and Carrots",
+            "glutenFree": true
+          }
         ]
       }
     },
