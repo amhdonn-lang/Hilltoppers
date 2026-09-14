@@ -666,7 +666,6 @@ header {
 }
 
 .cal-day-outside {
-  color: #c9ced4;
   cursor: default;
   pointer-events: none;
 }
@@ -679,16 +678,12 @@ header {
   background: #f0f2f5;
 }
 
-/* Stripes rather than a red wash: a flat red tint at this lightness is the
-   same grey as the green one to a red-green colourblind eye, and hatching
-   reads without relying on colour at all. */
+/* No tint and a pale number, so school days are the filled cells and days
+   off are the empty ones. That reads at a glance and does not depend on
+   telling one colour from another. */
 .cal-day.cal-no-school {
-  background: repeating-linear-gradient(
-    -45deg,
-    rgba(188, 76, 44, 0.32) 0 1.5px,
-    transparent 1.5px 5px
-  );
-  color: #a0a7b0;
+  background: transparent;
+  color: #c9ced4;
 }
 
 .cal-day.cal-today {
@@ -714,7 +709,7 @@ header {
 }
 
 .cal-day.cal-no-school .cal-mark {
-  color: #7d8591;
+  color: #a0a7b0;
 }
 
 /* What the tapped day holds. Same card as a dining column. */

@@ -325,7 +325,10 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
         ))}
         {cells.map((cell) => {
           if (!cell.inMonth) {
-            return <span key={cell.key} className="cal-day cal-day-outside">{cell.day}</span>;
+            // Left blank: an off day in this month is already drawn as an
+            // empty cell, and a neighbouring month's dates would read as more
+            // of those rather than as another month.
+            return <span key={cell.key} className="cal-day cal-day-outside" aria-hidden="true" />;
           }
           const info = infoByKey.get(cell.key);
           const classes = ['cal-day'];
