@@ -762,6 +762,33 @@ const Popup: React.FC = () => {
     return formatCountdown(nextStartsInMs);
   }, [nextBlock?.id, nextStartsInMs]);
 
+  /**
+   * Sits on the Schedule row through the user's own lunch: how long until it
+   * starts, then how long is left of it. Lunch is a sub-block of a class block,
+   * so the class stays current underneath; naming the wave keeps it clear which
+   * of the five the countdown belongs to.
+   */
+  const lunchCountdown = useMemo(() => {
+    if (!currentBlock || schedulePrefs.lunchWave == null) {
+      return null;
+    }
+    const mine = (currentBlock.subBlocks ?? []).find(
+      (sub) => lunchWaveFromName(sub.name) === schedulePrefs.lunchWave
+    );
+    if (!mine) {
+      return null;
+    }
+    const start = parseBlockTime(mine.start, baseDate);
+    const end = parseBlockTime(mine.end, baseDate);
+    if (now < start) {
+      return `${mine.name} in ${formatCountdown(start.getTime() - now.getTime())}`;
+    }
+    if (now < end) {
+      return `${mine.name} ends in ${formatCountdown(end.getTime() - now.getTime())}`;
+    }
+    return null;
+  }, [currentBlock, schedulePrefs.lunchWave, baseDate, now]);
+
   const currentDisplay = useMemo(() => {
     if (!currentBlock) {
       return null;
@@ -1113,6 +1140,9 @@ const Popup: React.FC = () => {
               </svg>
               <span>Schedule</span>
             </span>
+            {lunchCountdown ? (
+              <span className="toggle-note">{lunchCountdown}</span>
+            ) : null}
             <span className={`chevron ${scheduleExpanded ? 'open' : ''}`} aria-hidden="true" />
           </button>
         {scheduleExpanded && (
