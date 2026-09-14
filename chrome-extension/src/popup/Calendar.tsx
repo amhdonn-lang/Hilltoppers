@@ -159,7 +159,7 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
   const todayKey = useMemo(() => toKey(DateTime.fromJSDate(now, { zone: EST_ZONE })), [now]);
 
   const [month, setMonth] = useState<DateTime>(() => fromKey(todayKey).startOf('month'));
-  const [selectedKey, setSelectedKey] = useState<string | null>(todayKey);
+  const [selectedKey, setSelectedKey] = useState<string>(todayKey);
   const [events, setEvents] = useState<CalendarEvent[] | null>(null);
   const [eventsError, setEventsError] = useState<string | null>(null);
   const [dayTypes, setDayTypes] = useState<DayTypeMap>({});
@@ -244,7 +244,7 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
     return map;
   }, [cells, events, dayTypes, specialDays, periods]);
 
-  const selected = selectedKey ? infoByKey.get(selectedKey) ?? null : null;
+  const selected = infoByKey.get(selectedKey) ?? null;
 
   // Landing on a month with nothing picked left the panel empty; the first
   // of the month (or today, when it is this month) gives it something to say.
@@ -255,15 +255,17 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
     setScheduleOpen(false);
   };
 
+  // Tapping the selected day again keeps it selected: there is no state of the
+  // calendar where nothing is picked.
   const pickDay = (key: string) => {
-    setSelectedKey((prev) => (prev === key ? null : key));
+    setSelectedKey(key);
     setScheduleOpen(false);
   };
 
   // Blocks are fetched only when the row is opened: loadBlocksForDate goes to
   // the network and a month of days should not cost a month of requests.
   useEffect(() => {
-    if (!scheduleOpen || !selectedKey || !selected || selected.noSchool) {
+    if (!scheduleOpen || !selected || selected.noSchool) {
       return () => {};
     }
     const key = selectedKey;
@@ -305,8 +307,8 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
     return shownSchedule.blocks.filter((b) => !b.grades || b.grades.includes(viewingGrade));
   }, [shownSchedule, viewingGrade]);
 
-  const selectedDate = selectedKey ? fromKey(selectedKey) : null;
-  const scheduleDayType = shownSchedule?.dayType ?? (selectedKey ? dayTypes[selectedKey] ?? null : null);
+  const selectedDate = fromKey(selectedKey);
+  const scheduleDayType = shownSchedule?.dayType ?? dayTypes[selectedKey] ?? null;
 
   return (
     <div className="calendar-content">
@@ -351,7 +353,7 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
         })}
       </div>
 
-      {selected && selectedDate ? (
+      {selected ? (
         <div className="cal-day-panel">
           <p className="cal-day-title">
             <span>{selectedDate.toFormat('ccc, LLL d')}</span>
