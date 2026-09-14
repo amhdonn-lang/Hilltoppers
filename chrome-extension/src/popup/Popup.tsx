@@ -1216,7 +1216,7 @@ const Popup: React.FC = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
-              <path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+              <path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
             </svg>
             <span>Calendar</span>
           </span>
