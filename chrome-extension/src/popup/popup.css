@@ -679,10 +679,15 @@ header {
   background: #f0f2f5;
 }
 
-/* The number goes grey as well as the background going red, so a no-school
-   day still reads as "off" for anyone who cannot tell the red from the green. */
+/* Stripes rather than a red wash: a flat red tint at this lightness is the
+   same grey as the green one to a red-green colourblind eye, and hatching
+   reads without relying on colour at all. */
 .cal-day.cal-no-school {
-  background: rgba(188, 76, 44, 0.12);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(188, 76, 44, 0.32) 0 1.5px,
+    transparent 1.5px 5px
+  );
   color: #a0a7b0;
 }
 
