@@ -355,6 +355,11 @@
     "details": "Labor Day – No Classes",
     "source": "sja-calendar"
   },
+  "2026-09-25": {
+    "type": "custom",
+    "details": "Walk for a Healthier Community",
+    "schedule": []
+  },
   "2026-09-30": {
     "type": "late_start",
     "details": "Late Start Schedule",
