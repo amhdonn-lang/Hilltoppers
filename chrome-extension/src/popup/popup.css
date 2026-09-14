@@ -734,8 +734,13 @@ header {
   color: #7d8591;
   font-weight: 700;
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cal-day-status {
+  flex: 0 0 auto;
 }
 
 .cal-events {

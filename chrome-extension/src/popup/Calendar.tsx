@@ -12,7 +12,8 @@ import {
   fetchDayTypes,
   loadCachedDayTypes,
   saveCachedDayTypes,
-  type DayTypeMap
+  type DayTypeMap,
+  type PublishedDayType
 } from '../services/dayTypeService';
 import {
   fetchSpecialDays,
@@ -39,10 +40,10 @@ interface DayInfo {
   color: DayColor;
   marker: DayMarker;
   noSchool: boolean;
-  /** "Green Day", "No School", "Winter Break" — the first thing the panel says. */
-  status: string | null;
-  /** "Late start", "Capstone Day" — only when the bell schedule differs. */
-  scheduleNote: string | null;
+  /** Exactly one of the three day types, or null when the file does not say. */
+  label: PublishedDayType | null;
+  /** "Winter Break", "Late start" — stands in for the event list when it is empty. */
+  note: string | null;
   events: CalendarEvent[];
 }
 
@@ -117,23 +118,18 @@ function describeDay(
   const hasOtherEvent = dayEvents.some((e) => e.kind !== 'schedule');
   const specialSchedule = !noSchool && (Boolean(special?.type) || hasScheduleEvent);
 
+  const label: PublishedDayType | null = noSchool ? 'No School' : dayTypes[key] ?? null;
+
   let color: DayColor = null;
   if (noSchool) color = 'no-school';
-  else if (dayTypes[key] === 'Green Day') color = 'green';
-  else if (dayTypes[key] === 'White Day') color = 'white';
+  else if (label === 'Green Day') color = 'green';
+  else if (label === 'White Day') color = 'white';
 
-  let status: string | null = null;
-  if (noSchool) {
-    status = special?.details ?? period?.details ?? (isWeekend ? 'Weekend' : 'No School');
-  } else if (color === 'green' || color === 'white') {
-    status = dayTypes[key];
-  }
-
-  let scheduleNote: string | null = null;
-  if (!noSchool && special?.type) {
-    scheduleNote = special.type === 'custom'
-      ? (special.details ?? 'Special schedule')
-      : humanizeType(special.type);
+  // Holidays and late starts are nearly always events too, so this only has
+  // to carry the days the calendar feed says nothing about.
+  let note = special?.details ?? period?.details ?? null;
+  if (!note && !noSchool && special?.type) {
+    note = special.type === 'custom' ? 'Special schedule' : humanizeType(special.type);
   }
 
   return {
@@ -141,8 +137,8 @@ function describeDay(
     color,
     marker: specialSchedule ? 'star' : hasOtherEvent ? 'circle' : null,
     noSchool,
-    status,
-    scheduleNote,
+    label,
+    note,
     events: dayEvents
   };
 }
@@ -356,13 +352,12 @@ const Calendar: React.FC<CalendarProps> = ({ now, timeFormat, blockPrefs, viewin
         <div className="cal-day-panel">
           <p className="cal-day-title">
             <span>{selectedDate.toFormat('ccc, LLL d')}</span>
-            {selected.status ? <span className="cal-day-status">· {selected.status}</span> : null}
-            {selected.scheduleNote ? <span className="cal-day-status">· {selected.scheduleNote}</span> : null}
+            {selected.label ? <span className="cal-day-status">{selected.label}</span> : null}
           </p>
           {events === null ? (
             <p className="events-empty">Loading…</p>
           ) : selected.events.length === 0 ? (
-            <p className="events-empty">{eventsError ?? 'Nothing on this day'}</p>
+            <p className="events-empty">{eventsError ?? selected.note ?? 'Nothing on this day'}</p>
           ) : (
             <ul className="cal-events">
               {selected.events.map((event) => {
