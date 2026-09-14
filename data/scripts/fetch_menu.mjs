@@ -17,7 +17,6 @@ const DAYS_AHEAD = 7;
 // re-read twice a day.
 const FUTURE_MAX_AGE_MS = 12 * 60 * 60 * 1000;
 
-const uniq = (arr) => [...new Set(arr.map((s) => s.trim()).filter(Boolean))];
 const norm = (s) => s.trim().toLowerCase().replace(/\s+/g, " ");
 
 async function fetchHtml(url) {
@@ -78,9 +77,18 @@ function extractSectionItems(html, sectionName) {
 
  if ($course.length === 0) return [];
 
- return uniq(
- $course.find(".k10-recipe__name").map((_, el) => $(el).text()).get()
- );
+ const seen = new Set();
+ return $course.find(".k10-recipe").map((_, el) => {
+ const recipe = $(el);
+ const name = recipe.find(".k10-recipe__name").first().text().trim();
+ if (!name || seen.has(name.toLowerCase())) return null;
+ seen.add(name.toLowerCase());
+
+ // The menu's "Does Not Contain Gluten" filter excludes recipes with this
+ // allergen icon. Keep that same source signal rather than guessing from names.
+ const containsGluten = recipe.find('img[alt="Contains Gluten"]').length > 0;
+ return { name, glutenFree: !containsGluten };
+ }).get().filter(Boolean);
 }
 
 const MEAL_PLAN = [
