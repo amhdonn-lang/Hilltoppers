@@ -641,6 +641,9 @@ header {
   gap: 1px;
   height: 34px;
   padding: 4px 0 2px;
+  /* Buttons default to border-box and the out-of-month spans do not; rows
+     with both would otherwise come out taller than the rest. */
+  box-sizing: border-box;
   border: 1px solid transparent;
   border-radius: 6px;
   background: transparent;
@@ -676,9 +679,11 @@ header {
   background: #f0f2f5;
 }
 
+/* The number goes grey as well as the background going red, so a no-school
+   day still reads as "off" for anyone who cannot tell the red from the green. */
 .cal-day.cal-no-school {
   background: rgba(188, 76, 44, 0.12);
-  color: #8a3a22;
+  color: #a0a7b0;
 }
 
 .cal-day.cal-today {
@@ -704,7 +709,7 @@ header {
 }
 
 .cal-day.cal-no-school .cal-mark {
-  color: #8a3a22;
+  color: #7d8591;
 }
 
 /* What the tapped day holds. Same card as a dining column. */
