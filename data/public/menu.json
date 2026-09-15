@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T06:35:02.993Z",
+  "updatedAt": "2026-09-15T12:35:44.504Z",
   "source": "menus.tenkites.com",
   "menuDate": "2026-09-15",
   "menus": {
@@ -59,7 +59,7 @@
       ]
     }
   },
-  "daysUpdatedAt": "2026-09-14T19:11:53.809Z",
+  "daysUpdatedAt": "2026-09-15T12:35:44.504Z",
   "days": {
     "2026-09-15": {
       "breakfast": {
@@ -281,6 +281,7 @@
         "classicKitchen": [
           "Bacon Grilled Cheese",
           "Texas Grilled Cheese Sandwich",
+          "Grilled Ham & Cheese",
           "Seasoned Vegetable",
           "Cream of Tomato Basil Soup"
         ],
@@ -294,8 +295,9 @@
           "Honey-Glazed Roasted Root Vegetables"
         ],
         "globalFare": [
-          "Tilapia with Lemon Basil Vinaigrette",
-          "Broccoli & Rice Casserole",
+          "Garlic Butter Baked Cod",
+          "Curried Rice w/Potato and Chickpeas",
+          "Rice Pilaf",
           "Sauteed Broccolini"
         ]
       }
@@ -375,6 +377,54 @@
           "Vegetable Egg Roll",
           "Sugar Snap Peas with Red Peppers",
           "Fortune Cookie"
+        ]
+      }
+    },
+    "2026-09-22": {
+      "breakfast": {
+        "classicKitchen": [
+          "Mild Shredded Cheddar Cheese",
+          "Cheese Omelet",
+          "Sliced Smoked Ham",
+          "Red Onions",
+          "Bell Peppers",
+          "Bacon Bits",
+          "Shredded Mozzarella Cheese"
+        ],
+        "globalFare": [
+          "Cinnamon French Toast Homemade",
+          "Corned Beef Hash",
+          "Scrambled Eggs",
+          "Home Fried Potatoes"
+        ]
+      },
+      "lunch": {
+        "classicKitchen": [
+          "Fried Chicken Drumsticks",
+          "Red Quinoa & Garbanzo Beans",
+          "Rice Pilaf",
+          "Honey Buttered Baby Carrots"
+        ],
+        "globalFare": [
+          "Jerk Pork Loin",
+          "Kidney Beans",
+          "Mashed Sweet Potatoes",
+          "Sautéed Garlic Kale"
+        ]
+      },
+      "dinner": {
+        "classicKitchen": [
+          "Country Fried Steak",
+          "Baked Beans",
+          "Scalloped Potatoes",
+          "Roasted Asparagus",
+          "Fresh Roasted Green Beans"
+        ],
+        "globalFare": [
+          "Roasted Tomatoes & Zucchini",
+          "Chicken, Shrimp, and Sausage Jambalaya",
+          "French Bread",
+          "Jasmine Rice"
         ]
       }
     }
