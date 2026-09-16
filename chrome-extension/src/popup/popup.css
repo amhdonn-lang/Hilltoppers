@@ -1546,7 +1546,8 @@ header {
 :root[data-theme='dark'] .popup .idea-vote {
   background: var(--theme-card);
   color: var(--theme-text);
-  border-color: var(--theme-border);
+  border-color: var(--theme-card-border);
+  box-shadow: 0 0 0 1px var(--theme-card-border), 0 0 10px rgba(139, 231, 162, 0.22);
 }
 
 :root[data-theme='dark'] .popup .cal-day.cal-green,
