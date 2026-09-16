@@ -1,4 +1,4 @@
-name: Build extension
+name: Build extension artifact
 
 # Builds the Chrome extension and attaches the ready-to-load `dist/` folder to
 # the run as a zip, so a change can be tried without a local Node install:
