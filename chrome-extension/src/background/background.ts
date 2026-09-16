@@ -18,6 +18,9 @@ const REFRESH_INTERVAL_MINUTES = 60;
 const ICON_TICK_ALARM = 'schedule-icon-tick';
 const ICON_TICK_INTERVAL_MINUTES = 1;
 const ICON_PRECISE_ALARM = 'schedule-icon-precise';
+// Survives a service worker restart but not a browser restart, which matches
+// how long a day's schedule is worth keeping.
+const SESSION_CACHE_KEY = 'scheduleCache';
 
 let cachedSchedule: Block[] = [];
 let cachedDateKey = '';
@@ -30,6 +33,7 @@ let refreshInFlight: Promise<void> | null = null;
 let hasLoadedSchedule = false;
 let iconUpdatePending = false;
 let iconUpdateInFlight: Promise<void> | null = null;
+let hydrationInFlight: Promise<void> | null = null;
 // Keyed by period and day, since the popup can page through the menu for the
 // days ahead. An empty day means "whatever the file calls today".
 const diningSlotKey = (period: DiningPeriod, dateKey?: string): string =>
@@ -309,6 +313,72 @@ function updateActionIcon(): Promise<void> {
   return iconUpdateInFlight;
 }
 
+type SessionScheduleCache = {
+  dateKey: string;
+  blocks: Block[];
+  dayType: string | null;
+  details: string | null;
+  networkFailed: boolean;
+  timestamp: number;
+  timeFormat: TimeFormat;
+};
+
+function persistScheduleToSession(): void {
+  if (typeof chrome === 'undefined' || !chrome.storage?.session) return;
+  const payload: SessionScheduleCache = {
+    dateKey: cachedDateKey,
+    blocks: cachedSchedule,
+    dayType: cachedDayType,
+    details: cachedDetails,
+    networkFailed: cachedNetworkFailed,
+    timestamp: cachedTimestamp ?? Date.now(),
+    timeFormat: cachedTimeFormat
+  };
+  chrome.storage.session.set({ [SESSION_CACHE_KEY]: payload }).catch((error) => {
+    console.debug('[background] Failed to persist schedule to session', error);
+  });
+}
+
+/**
+ * Restore the last loaded schedule into memory so a restarted service worker
+ * can draw the right number immediately instead of waiting on the network.
+ * A cache from an earlier day is ignored: drawing yesterday's blocks against
+ * today's clock would be worse than drawing nothing.
+ */
+function hydrateScheduleFromSession(): Promise<void> {
+  if (hydrationInFlight) return hydrationInFlight;
+
+  hydrationInFlight = (async () => {
+    if (typeof chrome === 'undefined' || !chrome.storage?.session) return;
+    try {
+      const stored = await chrome.storage.session.get(SESSION_CACHE_KEY);
+      const cache = stored?.[SESSION_CACHE_KEY] as SessionScheduleCache | undefined;
+      // A refresh that finished while this read was in flight is newer.
+      if (hasLoadedSchedule) return;
+      if (!cache || !Array.isArray(cache.blocks) || cache.dateKey !== getTodayKey()) return;
+
+      cachedSchedule = cache.blocks;
+      cachedDateKey = cache.dateKey;
+      cachedDayType = cache.dayType ?? null;
+      cachedDetails = cache.details ?? null;
+      cachedNetworkFailed = cache.networkFailed ?? false;
+      cachedTimestamp = cache.timestamp ?? null;
+      if (cache.timeFormat) cachedTimeFormat = cache.timeFormat;
+      hasLoadedSchedule = true;
+
+      console.info('[background] Restored schedule from session cache', {
+        dateKey: cachedDateKey,
+        blockCount: cachedSchedule.length,
+        dayType: cachedDayType
+      });
+    } catch (error) {
+      console.debug('[background] Failed to read session schedule cache', error);
+    }
+  })();
+
+  return hydrationInFlight;
+}
+
 async function refreshSchedule(): Promise<void> {
   if (refreshInFlight) {
     await refreshInFlight;
@@ -329,6 +399,7 @@ async function refreshSchedule(): Promise<void> {
       cachedNetworkFailed = networkFailed ?? false;
       cachedTimestamp = Date.now();
       hasLoadedSchedule = true;
+      persistScheduleToSession();
 
       console.info('[background] Refresh complete', {
         dateKey: cachedDateKey,
@@ -360,6 +431,10 @@ async function refreshSchedule(): Promise<void> {
       cachedNetworkFailed = true;
       cachedDateKey = getTodayKey();
     } finally {
+      // Even a failed attempt has told us what we are going to know. Keeping
+      // the icon gate shut past this point would leave the toolbar frozen on
+      // a number that only grows more wrong.
+      hasLoadedSchedule = true;
       await updateActionIcon();
       refreshInFlight = null;
     }
@@ -570,33 +645,38 @@ if (typeof chrome !== 'undefined' && chrome.idle?.onStateChanged) {
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === 'getScheduleCache') {
-    // The popup opening is a signal the user is looking at the toolbar right
-    // now, so make sure the icon reflects the current minute before anything
-    // slower (the refresh below) gets a chance to run.
-    redrawIconFromCache('popup opened');
-    if (cachedTimestamp) {
-      const cacheAge = Date.now() - cachedTimestamp;
-      const cacheAgeMinutes = Math.round(cacheAge / 60000);
-      console.info('[background] Returning cached schedule', {
+    // Opening the popup can be what starts the service worker, in which case
+    // memory is empty and only the session cache knows today's schedule. Wait
+    // for that read so the popup gets a schedule on the first try instead of
+    // a blank frame until the network refresh lands.
+    hydrateScheduleFromSession().finally(() => {
+      // The user is looking at the toolbar right now, so get the icon onto the
+      // current minute before anything slower gets a chance to run.
+      redrawIconFromCache('popup opened');
+      if (cachedTimestamp) {
+        const cacheAge = Date.now() - cachedTimestamp;
+        const cacheAgeMinutes = Math.round(cacheAge / 60000);
+        console.info('[background] Returning cached schedule', {
+          dateKey: cachedDateKey,
+          blockCount: cachedSchedule.length,
+          dayType: cachedDayType,
+          cacheTimestamp: new Date(cachedTimestamp).toISOString(),
+          cacheAgeMinutes: cacheAgeMinutes
+        });
+      } else {
+        console.info('[background] Returning cached schedule (no timestamp)', {
+          dateKey: cachedDateKey,
+          blockCount: cachedSchedule.length,
+          dayType: cachedDayType
+        });
+      }
+      sendResponse({
         dateKey: cachedDateKey,
-        blockCount: cachedSchedule.length,
+        blocks: cachedSchedule,
         dayType: cachedDayType,
-        cacheTimestamp: new Date(cachedTimestamp).toISOString(),
-        cacheAgeMinutes: cacheAgeMinutes
+        details: cachedDetails,
+        networkFailed: cachedNetworkFailed
       });
-    } else {
-      console.info('[background] Returning cached schedule (no timestamp)', {
-        dateKey: cachedDateKey,
-        blockCount: cachedSchedule.length,
-        dayType: cachedDayType
-      });
-    }
-    sendResponse({
-      dateKey: cachedDateKey,
-      blocks: cachedSchedule,
-      dayType: cachedDayType,
-      details: cachedDetails,
-      networkFailed: cachedNetworkFailed
     });
     return true;
   }
@@ -650,6 +730,7 @@ if (typeof chrome !== 'undefined' && chrome.storage?.onChanged) {
       if (newPrefs?.timeFormat && newPrefs.timeFormat !== cachedTimeFormat) {
         cachedTimeFormat = newPrefs.timeFormat;
         console.info('[background] Time format updated to', cachedTimeFormat);
+        persistScheduleToSession();
         updateActionIcon().catch((error) => {
           console.debug('[background] Failed to update icon after time format change', error);
         });
@@ -658,12 +739,17 @@ if (typeof chrome !== 'undefined' && chrome.storage?.onChanged) {
   });
 }
 
-// Initial kick-off when the service worker spins up.
-refreshSchedule().catch((error) => {
-  console.error('[background] Initial refresh failed', error);
-});
+// Initial kick-off when the service worker spins up. Chrome stops the worker
+// whenever it goes idle, so this runs many times a day; the session cache is
+// what keeps those restarts invisible in the toolbar.
 ensureRefreshAlarm();
 ensureIconAlarm();
-updateActionIcon().catch((error) => {
-  console.debug('[background] Initial icon update failed', error);
-});
+void (async () => {
+  await hydrateScheduleFromSession();
+  await updateActionIcon().catch((error) => {
+    console.debug('[background] Initial icon update failed', error);
+  });
+  await refreshSchedule().catch((error) => {
+    console.error('[background] Initial refresh failed', error);
+  });
+})();
