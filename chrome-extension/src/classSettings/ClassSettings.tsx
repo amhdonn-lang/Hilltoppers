@@ -445,18 +445,10 @@ const ClassSettings: React.FC = () => {
   }, [schedulePrefs.graduationYear]);
 
   const currentThemeMode = schedulePrefs.themeMode ?? 'system';
-  useExtensionTheme(currentThemeMode);
-  const currentThemeClass = useMemo(() => {
-    if (currentThemeMode === 'dark') {
-      return 'class-settings--dark';
-    }
-    if (currentThemeMode === 'light') {
-      return 'class-settings--light';
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'class-settings--dark'
-      : 'class-settings--light';
-  }, [currentThemeMode]);
+  const resolvedTheme = useExtensionTheme(currentThemeMode);
+  const currentThemeClass = resolvedTheme === 'dark'
+    ? 'class-settings--dark'
+    : 'class-settings--light';
 
   const handleLunchWaveChange = (value: string) => {
     const wave = lunchWaveFromName(value);
