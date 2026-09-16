@@ -26,7 +26,6 @@
 
 :root[data-theme='dark'] .login__container {
   border-color: #8be7a2;
-  box-shadow: 0 0 0 1px #8be7a2, 0 0 10px rgba(139, 231, 162, 0.22);
 }
 
 .login {

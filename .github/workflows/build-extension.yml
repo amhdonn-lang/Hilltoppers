@@ -64,7 +64,7 @@ jobs:
       - name: Verify theme build
         shell: bash
         run: |
-          test "$(node -p "require('./dist/manifest.json').version")" = "1.4.23"
+          test "$(node -p "require('./dist/manifest.json').version")" = "1.4.24"
           if grep -R -- "--theme-card: #000000\|--surface: #000000" dist/assets; then
             echo "The build still contains pure-black dark cards."
             exit 1
@@ -72,7 +72,7 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: HilltoppersDarkv9
+          name: HilltoppersDarkv10
           path: chrome-extension/dist
           if-no-files-found: error
 

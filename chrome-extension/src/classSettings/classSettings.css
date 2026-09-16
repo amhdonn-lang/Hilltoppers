@@ -41,7 +41,6 @@
 .class-settings--dark .class-settings__table,
 .class-settings--dark .class-settings__theme-control {
   border-color: #8be7a2;
-  box-shadow: 0 0 0 1px #8be7a2, 0 0 10px rgba(139, 231, 162, 0.22);
 }
 
 @media (prefers-color-scheme: dark) {
