@@ -268,7 +268,10 @@ async function applyActionIcon(): Promise<void> {
       if (imageData) {
         await chrome.action.setIcon({ imageData });
       } else {
-        await chrome.action.setIcon({ path: STATIC_ICON_PATHS });
+        // A countdown was already on the toolbar. If canvas rendering is not
+        // available for this one update, keep that number instead of briefly
+        // replacing it with the Hilltoppers artwork.
+        console.debug('[background] Icon canvas unavailable; keeping previous countdown');
       }
     } else {
       await chrome.action.setIcon({ path: STATIC_ICON_PATHS });
@@ -380,6 +383,11 @@ function hydrateScheduleFromSession(): Promise<void> {
 }
 
 async function refreshSchedule(): Promise<void> {
+  // A wake event can start a refresh before the module's boot task has read
+  // session storage. Finish that read first so a failed network request never
+  // turns a valid saved schedule into an empty, static toolbar icon.
+  await hydrateScheduleFromSession();
+
   if (refreshInFlight) {
     await refreshInFlight;
     return;
@@ -429,12 +437,7 @@ async function refreshSchedule(): Promise<void> {
     } catch (error) {
       console.error('[background] Failed to refresh schedule', error);
       cachedNetworkFailed = true;
-      cachedDateKey = getTodayKey();
     } finally {
-      // Even a failed attempt has told us what we are going to know. Keeping
-      // the icon gate shut past this point would leave the toolbar frozen on
-      // a number that only grows more wrong.
-      hasLoadedSchedule = true;
       await updateActionIcon();
       refreshInFlight = null;
     }
@@ -632,14 +635,17 @@ function redrawIconFromCache(reason: string): void {
 if (typeof chrome !== 'undefined' && chrome.idle?.onStateChanged) {
   chrome.idle.onStateChanged.addListener((state) => {
     if (state !== 'active') return;
-    redrawIconFromCache('wake');
-    ensureIconAlarm();
-    ensureRefreshAlarm();
-    if (cachedDateKey !== getTodayKey()) {
-      refreshSchedule().catch((error) => {
-        console.debug('[background] Refresh after wake failed', error);
-      });
-    }
+    void (async () => {
+      await hydrateScheduleFromSession();
+      redrawIconFromCache('wake');
+      ensureIconAlarm();
+      ensureRefreshAlarm();
+      if (cachedDateKey !== getTodayKey()) {
+        refreshSchedule().catch((error) => {
+          console.debug('[background] Refresh after wake failed', error);
+        });
+      }
+    })();
   });
 }
 
