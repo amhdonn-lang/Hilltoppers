@@ -27,14 +27,14 @@
 .class-settings--dark {
   color-scheme: dark;
   --bg: #0f1115;
-  --surface: #1a1d23;
-  --surface-muted: #1f242c;
-  --text: #e6e8eb;
-  --muted: #a5acb5;
-  --border: #2d333c;
-  --accent: #6bd48a;
-  --accent-muted: rgba(107, 212, 138, 0.18);
-  --danger: #f3a38b;
+  --surface: #000000;
+  --surface-muted: #171717;
+  --text: #ffffff;
+  --muted: #d0d5d9;
+  --border: #343a3f;
+  --accent: #8be7a2;
+  --accent-muted: rgba(139, 231, 162, 0.18);
+  --danger: #ff9a9a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -360,6 +360,75 @@ body, html {
 
 .class-settings__field select {
   min-width: 120px;
+}
+
+.class-settings__theme-control {
+  margin: -4px 0 20px;
+  padding: 16px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-muted);
+}
+
+.class-settings__theme-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.class-settings__theme-heading h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+.class-settings__theme-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.class-settings__theme-heading strong {
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.class-settings__theme-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.class-settings__theme-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.class-settings__theme-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.class-settings__theme-option:hover,
+.class-settings__theme-option:has(input:focus-visible) {
+  border-color: var(--accent);
+}
+
+.class-settings__theme-option--selected {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+  color: var(--accent);
 }
 
 .class-settings__table {

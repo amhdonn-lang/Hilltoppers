@@ -27,6 +27,7 @@ import { onAuthState, reloadCurrentUser, signOut as signOutUser } from '../fireb
 import type { AuthUser } from '../firebase/auth';
 import { logClassSettingsReset, logPreferenceSaved, logScreenView } from '../firebase/analytics';
 import { FirebaseError } from 'firebase/app';
+import { useExtensionTheme } from '../theme';
 
 interface SaveState {
   status: 'idle' | 'saving' | 'success' | 'error';
@@ -444,6 +445,7 @@ const ClassSettings: React.FC = () => {
   }, [schedulePrefs.graduationYear]);
 
   const currentThemeMode = schedulePrefs.themeMode ?? 'system';
+  useExtensionTheme(currentThemeMode);
   const currentThemeClass = useMemo(() => {
     if (currentThemeMode === 'dark') {
       return 'class-settings--dark';
@@ -588,6 +590,29 @@ const ClassSettings: React.FC = () => {
         <div className="class-settings__form">
           <section className="class-settings__panel">
             <h2>Display Settings</h2>
+            <div className="class-settings__theme-control">
+              <div className="class-settings__theme-heading">
+                <div>
+                  <h3>Appearance</h3>
+                  <p>Choose how the class settings page looks.</p>
+                </div>
+                <strong>{currentThemeMode === 'dark' ? 'Dark mode' : currentThemeMode === 'light' ? 'Light mode' : 'System'}</strong>
+              </div>
+              <div className="class-settings__theme-options" role="radiogroup" aria-label="Theme">
+                {(['light', 'system', 'dark'] as ThemeMode[]).map((mode) => (
+                  <label key={mode} className={`class-settings__theme-option ${currentThemeMode === mode ? 'class-settings__theme-option--selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="theme-mode"
+                      value={mode}
+                      checked={currentThemeMode === mode}
+                      onChange={() => handleThemeModeChange(mode)}
+                    />
+                    <span>{mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'System'}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
             <div className="class-settings__field">
               <label htmlFor="time-format">Time format</label>
               <select
@@ -597,18 +622,6 @@ const ClassSettings: React.FC = () => {
               >
                 <option value="12h">12-hour</option>
                 <option value="24h">24-hour</option>
-              </select>
-            </div>
-            <div className="class-settings__field">
-              <label htmlFor="theme-mode">Theme</label>
-              <select
-                id="theme-mode"
-                value={currentThemeMode}
-                onChange={(e) => handleThemeModeChange(e.target.value as ThemeMode)}
-              >
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
               </select>
             </div>
             <div className="class-settings__field">
