@@ -37,6 +37,12 @@
   --danger: #ff9a9a;
 }
 
+.class-settings--dark .class-settings__panel,
+.class-settings--dark .class-settings__table,
+.class-settings--dark .class-settings__theme-control {
+  border-color: #70d88b;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;

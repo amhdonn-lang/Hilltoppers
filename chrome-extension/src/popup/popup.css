@@ -211,7 +211,7 @@ header {
 :root[data-theme='dark'] .popup .dining-column {
   background: var(--theme-card);
   color: var(--theme-text);
-  border-color: var(--theme-border);
+  border-color: var(--theme-card-border);
 }
 
 :root[data-theme='dark'] .popup input,
