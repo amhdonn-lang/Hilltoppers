@@ -27,6 +27,9 @@ let cachedNetworkFailed = false;
 let cachedTimeFormat: TimeFormat = '12h';
 let cachedTimestamp: number | null = null;
 let refreshInFlight: Promise<void> | null = null;
+let hasLoadedSchedule = false;
+let iconUpdatePending = false;
+let iconUpdateInFlight: Promise<void> | null = null;
 // Keyed by period and day, since the popup can page through the menu for the
 // days ahead. An empty day means "whatever the file calls today".
 const diningSlotKey = (period: DiningPeriod, dateKey?: string): string =>
@@ -245,7 +248,15 @@ const STATIC_ICON_PATHS = {
   128: 'icons/icon128.png'
 };
 
-async function updateActionIcon(): Promise<void> {
+async function applyActionIcon(): Promise<void> {
+  // A Manifest V3 service worker can be started with no in-memory schedule,
+  // while Chrome still has the number it drew before the worker was stopped.
+  // Do not replace that useful number with the default artwork until we have
+  // successfully loaded a schedule for this worker.
+  if (!hasLoadedSchedule) {
+    return;
+  }
+
   const { label, tooltip, kind, useStaticIcon } = determineCountdown();
   try {
     if (!useStaticIcon && (kind === 'current' || kind === 'upcoming')) {
@@ -272,6 +283,32 @@ async function updateActionIcon(): Promise<void> {
   }
 }
 
+/**
+ * Chrome action updates are asynchronous. Alarms, wake events, popup opens,
+ * and schedule refreshes can otherwise finish out of order, letting an older
+ * static icon overwrite a newer countdown. Coalesce concurrent requests and
+ * apply the newest state after the current write finishes.
+ */
+function updateActionIcon(): Promise<void> {
+  iconUpdatePending = true;
+  if (iconUpdateInFlight) {
+    return iconUpdateInFlight;
+  }
+
+  iconUpdateInFlight = (async () => {
+    try {
+      do {
+        iconUpdatePending = false;
+        await applyActionIcon();
+      } while (iconUpdatePending);
+    } finally {
+      iconUpdateInFlight = null;
+    }
+  })();
+
+  return iconUpdateInFlight;
+}
+
 async function refreshSchedule(): Promise<void> {
   if (refreshInFlight) {
     await refreshInFlight;
@@ -291,6 +328,7 @@ async function refreshSchedule(): Promise<void> {
       cachedDetails = details ?? null;
       cachedNetworkFailed = networkFailed ?? false;
       cachedTimestamp = Date.now();
+      hasLoadedSchedule = true;
 
       console.info('[background] Refresh complete', {
         dateKey: cachedDateKey,
