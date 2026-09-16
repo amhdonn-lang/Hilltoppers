@@ -20,8 +20,8 @@
 :root[data-theme='dark'] {
   color-scheme: dark;
   --theme-page: #111315;
-  --theme-card: #24282c;
-  --theme-card-muted: #17191b;
+  --theme-card: #245c3a;
+  --theme-card-muted: #1b472c;
   --theme-input: #080909;
   --theme-text: #ffffff;
   --theme-text-muted: #d0d5d9;
@@ -44,7 +44,7 @@
 }
 
 :root[data-theme='dark'][data-day-type='white'] {
-  --theme-page: #24282c;
+  --theme-page: #182b20;
 }
 
 html,
