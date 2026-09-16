@@ -12,7 +12,7 @@ on:
       - "chrome-extension/**"
       - ".github/workflows/build-extension.yml"
   push:
-    branches: [main]
+    branches: [main, add-class-settings-theme-mode]
     paths:
       - "chrome-extension/**"
       - ".github/workflows/build-extension.yml"
