@@ -7,6 +7,7 @@
   --theme-text: #111111;
   --theme-text-muted: #5b6570;
   --theme-text-subtle: #7d8591;
+  --theme-icon: #111111;
   --theme-border: rgba(17, 17, 17, 0.18);
   --theme-border-muted: rgba(17, 17, 17, 0.1);
   --theme-accent: #1a7f37;
@@ -25,6 +26,7 @@
   --theme-text: #ffffff;
   --theme-text-muted: #d0d5d9;
   --theme-text-subtle: #a0a8af;
+  --theme-icon: #ffffff;
   --theme-border: #343a3f;
   --theme-border-muted: #252a2e;
   --theme-accent: #70d88b;
@@ -57,4 +59,8 @@ input,
 select,
 textarea {
   color-scheme: inherit;
+}
+
+:root[data-theme='dark'] svg {
+  color: var(--theme-icon);
 }

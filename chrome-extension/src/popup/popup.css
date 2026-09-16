@@ -1625,3 +1625,7 @@ header {
 :root[data-theme='dark'] .popup .idea-vote.voted {
   color: var(--theme-accent-strong);
 }
+
+:root[data-theme='dark'] .popup .chevron {
+  border-top-color: var(--theme-icon);
+}
