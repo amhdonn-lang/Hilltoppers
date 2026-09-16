@@ -19,7 +19,7 @@
 :root[data-theme='dark'] {
   color-scheme: dark;
   --theme-page: #111315;
-  --theme-card: #000000;
+  --theme-card: #24282c;
   --theme-card-muted: #17191b;
   --theme-input: #080909;
   --theme-text: #ffffff;
